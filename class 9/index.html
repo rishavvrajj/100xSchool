@@ -22,19 +22,25 @@
 
                 noteTitle.innerHTML = notes[i].title;
                 noteNote.innerHTML = `${notes[i].title} : ` + ` ${notes[i].text}`;
-                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; heigth: 10px; display: flex; justify-content: flex-start; padding: 5px")
+                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; height: 30px; display: flex; justify-content: flex-start; padding: 5px 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;")
                 document.getElementById("notes").appendChild(noteNote);
             }
-
         }
         getTodos();
         async function createTodos() {
             const text = document.getElementById('note').value;
             const title = document.getElementById('title').value;
-            await axios.post('http://localhost:3000/notes', {
-                title: title,
-                text: text
+
+            if (!text, !title) {
+                console.error("Please Enter title and notes");
+            }
+            
+            if (text, title) {
+                await axios.post('http://localhost:3000/notes', {
+                    title: title,
+                    text: text
             });
+            };
 
             document.getElementById('note').value = "";
             document.getElementById('title').value = "";
@@ -45,8 +51,11 @@
 </head>
 
 <body>
-    <div class="notes" id="notes">
-        Notes List
+    <div class="notes">
+        <span>Notes</span>
+        <div id="notes">
+            Notes List
+        </div>
     </div>
 
     <div class="create">
