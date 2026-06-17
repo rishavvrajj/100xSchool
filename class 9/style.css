@@ -10,6 +10,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
+    gap: 20px ;
     align-items: center;
     padding: 20px;
 }
@@ -17,14 +18,21 @@ body {
 .notes {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     height: 80vh;
     width: 50vh;
     border: 1px solid #e0e0e0;
+    border-radius: 5px;
     font-size: 14px;
     color: #333333;
-    text-align: center;
     letter-spacing: 0.5px;
+    padding: 5px 0px;
+}
+
+.notes span{
+    padding: 10px;
+    font-weight: 900;
+    font-size: larger;
 }
 
 .create {
@@ -33,6 +41,7 @@ body {
     width: 100%;
     max-width: 50vh;
     border: 1px solid #e0e0e0;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     gap: 12px;
