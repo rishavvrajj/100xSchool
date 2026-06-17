@@ -6,14 +6,19 @@ const app = express();
 app.use(express.static(__dirname));
 app.use(express.json())
 
-const notes = ["rishav", "rishav" , "rishav"];
+const notes = [{ title: 'rishav raj', text: 'rishav raj' }];
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + 'index.html'))
 });
 
 app.post('/notes', function (req, res) {
-    const note = req.body.note;
+    const title = req.body.title;
+    const text = req.body.text;
+    const note = {
+        title: title,
+        text: text
+    }
     notes.push(note);
 
     res.json({

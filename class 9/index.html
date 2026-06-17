@@ -11,15 +11,18 @@
         async function getTodos() {
             const response = await axios.get('http://localhost:3000/notes');
             const notes = response.data.notes;
+            console.log(notes)
 
             document.getElementById('notes').innerHTML = "";
 
             for (let i = 0; i < notes.length; i++) {
 
                 const noteNote = document.createElement("div");
+                const noteTitle = document.createElement("div");
 
-                noteNote.innerHTML = notes[i];
-                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; margin: 5px 10px; heigth: 10px;")
+                noteTitle.innerHTML = notes[i].title;
+                noteNote.innerHTML = `${notes[i].title} : ` + ` ${notes[i].text}`;
+                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; heigth: 10px; display: flex; justify-content: flex-start; padding: 5px")
                 document.getElementById("notes").appendChild(noteNote);
             }
 
@@ -27,11 +30,14 @@
         getTodos();
         async function createTodos() {
             const text = document.getElementById('note').value;
+            const title = document.getElementById('title').value;
             await axios.post('http://localhost:3000/notes', {
-                note: text
+                title: title,
+                text: text
             });
 
             document.getElementById('note').value = "";
+            document.getElementById('title').value = "";
             getTodos();
         }
     </script>
