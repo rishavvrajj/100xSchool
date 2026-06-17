@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        async function add() {
+            const a = document.getElementById('first').value;
+            const b = document.getElementById('second').value;
+
+            const res = await fetch('http://localhost:5000/sum/', {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({
+                    a: a,
+                    b: b
+                })
+            });
+            const json = await res.json();
+
+            document.getElementById('response').innerHTML = json.ans;
+        }
+        async function sub() {
+            const a = document.getElementById('first').value;
+            const b = document.getElementById('second').value;
+
+            const res = await fetch('http://localhost:5000/sub/', {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({
+                    a: a,
+                    b: b
+                })
+            });
+            const json = await res.json();
+
+            document.getElementById('response').innerHTML = json.ans;
+        }
+        async function mul() {
+            const a = document.getElementById('first').value;
+            const b = document.getElementById('second').value;
+
+            const res = await fetch('http://localhost:5000/mul/', {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({
+                    a: a,
+                    b: b
+                })
+            });
+            const json = await res.json();
+
+            document.getElementById('response').innerHTML = json.ans;
+        }
+        async function div() {
+            const a = document.getElementById('first').value;
+            const b = document.getElementById('second').value;
+
+            const res = await fetch('http://localhost:5000/div/', {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({
+                    a: a,
+                    b: b
+                })
+            });
+            const json = await res.json();
+
+            document.getElementById('response').innerHTML = json.ans;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <input id="first" type="text" placeholder="First Number" class="input-field" />
+
+        <input id="second" type="text" placeholder="Second Number" class="input-field" />
+
+        <div class="button-grid">
+            <button class="btn btn-add" onclick="add()">Add</button>
+            <button class="btn btn-sub" onclick="sub()">Sub</button>
+            <button class="btn btn-mul" onclick="mul()">Mul</button>
+            <button class="btn btn-div" onclick="div()">Div</button>
+        </div>
+
+        <div id="response" class="response">
+
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
