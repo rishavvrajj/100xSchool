@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function getTodos() {
+            const response = await axios.get('http://localhost:3000/notes', {
+                headers: {
+                    token: localStorage.getItem("token")
+                }
+            });
+            const notes = response.data.notes;
+            console.log(notes)
+
+            document.getElementById('notes').innerHTML = "";
+
+            for (let i = 0; i < notes.length; i++) {
+
+                const noteNote = document.createElement("div");
+                const noteTitle = document.createElement("div");
+
+                const user = notes[i].user;
+                const title = notes[i].title;
+                const text = notes[i].text;
+
+                noteTitle.innerHTML = notes[i].title;
+                noteNote.innerHTML = `${user} : ` + `${title} : ` + ` ${text}`;
+                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; height: 30px; display: flex; justify-content: flex-start; padding: 5px 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;")
+                document.getElementById("notes").appendChild(noteNote);
+            }
+        }
+        getTodos();
+        async function createTodos() {
+            const text = document.getElementById('note').value;
+            const title = document.getElementById('title').value;
+
+            if (!text, !title) {
+                console.error("Please Enter title and notes");
+            }
+            
+            if (text, title) {
+                await axios.post('http://localhost:3000/notes', {
+                    title: title,
+                    text: text
+                }, {
+                    headers: {
+                        token: localStorage.getItem("token")
+                    }
+                });
+            };
+
+            document.getElementById('note').value = "";
+            document.getElementById('title').value = "";
+            getTodos();
+        }
+    </script>
+    <title>Notes</title>
+</head>
+
+<body>
+    <div class="notes">
+        <span>Notes</span>
+        <div id="notes">
+            Notes List
+        </div>
+    </div>
+
+    <div class="create">
+        <textarea class="title" id="title" type="text" placeholder="Title"></textarea>
+        <textarea class="note" id="note" type="text" placeholder="Enter your note"></textarea>
+        <button class="button" onclick="createTodos()">Create</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
