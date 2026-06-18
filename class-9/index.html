@@ -30,7 +30,7 @@
 
                 noteTitle.innerHTML = notes[i].title;
                 noteNote.innerHTML = `${user} : ` + `${title} : ` + ` ${text}`;
-                noteNote.setAttribute("style","background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; height: 30px; display: flex; justify-content: flex-start; padding: 5px 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;")
+                noteNote.setAttribute("style", "background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; margin: 5px 10px; height: 30px; display: flex; justify-content: flex-start; padding: 5px 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;")
                 document.getElementById("notes").appendChild(noteNote);
             }
         }
@@ -42,7 +42,7 @@
             if (!text, !title) {
                 console.error("Please Enter title and notes");
             }
-            
+
             if (text, title) {
                 await axios.post('http://localhost:3000/notes', {
                     title: title,
