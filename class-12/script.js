@@ -63,15 +63,15 @@ app.post("/signin", async (req, res) => {
 app.post("/organization", authMiddleware, async (req, res) => {
     const userId = req.userId;
 
-    const title = req.body.title;
+    const organizatontitle = req.body.organizatontitle;
     const description = req.body.description;
     const admin = userId;
 
-    const orgExist = organizatonModel.findOne({
-        title : title
+    const organizationExist = await organizatonModel.findOne({
+        title : organizatontitle
     });
 
-    if (orgExist) {
+    if (organizationExist) {
         res.status(403).json({
             msg : "Organization Already Exists."
         });
@@ -79,7 +79,7 @@ app.post("/organization", authMiddleware, async (req, res) => {
     };
 
     const NewOrg = await organizatonModel.create({
-        title: title,
+        title: organizatontitle,
         description: description,
         admin: admin,
         member: []
@@ -92,12 +92,13 @@ app.post("/organization", authMiddleware, async (req, res) => {
 });
 
 app.get("/organization", authMiddleware, async (req, res) => {
-    const userid = req.userid;
-    const organizatontitle = req.body.organizatontitle;
+    const userId = req.userId;
 
-    const organization = await organizatonModel.findOne({
-        title : organizatontitle
+    const organization = await organizatonModel.find({
+        admin : userId
     });
+
+    console.log(organization)
 
     if (!organization) {
         res.status(403).json({
@@ -113,19 +114,41 @@ app.get("/organization", authMiddleware, async (req, res) => {
 
 app.delete("/organization", authMiddleware, async (req, res) => {
     const userId = req.userId;
+
+    const organizationtitle = req.body.organizationtitle;
+    
+    const organizationExist = await organizatonModel.findOne({
+        title : organizationtitle
+    });
+
+    if (!organizationExist && organizationExist.admin != userid) {
+        res.status(403).json({
+            msg : "Organization Doesn't Exist or Invalid Credentials!"
+        });
+        return;
+    };
+
+    await organizatonModel.deleteOne({
+        title : organizationtitle
+    });
+
+    res.status(200).json({
+        msg : "Successfully deleted !",
+        organization : deletedorganization
+    })
 });
 
-app.post("/addmember", authMiddleware, async (req, res) => {
+app.post("/member", authMiddleware, async (req, res) => {
     const userId = req.userId;
 
     const organizationtitle = req.body.organizationtitle;
     const memberUsername = req.body.memberUsername;
 
-    const organization = await organizatonModel.findOne({
+    const organizationExist = await organizatonModel.findOne({
         title : organizationtitle
     });
 
-    if (!organization & organization.admin !== userId) {
+    if (!organizationExist || organizationExist.admin != userId) {
           res.status(403).json({
             msg : "invalid credentials !"
           });
@@ -143,7 +166,7 @@ app.post("/addmember", authMiddleware, async (req, res) => {
         return;
     };
 
-    await organizatonModel.updateOne({
+    const organization = await organizatonModel.updateOne({
         title: organizationtitle
     }, {
         "$push" : {
@@ -154,6 +177,52 @@ app.post("/addmember", authMiddleware, async (req, res) => {
     res.status(200).json({
         member,
         organization
+    })
+});
+
+app.delete("/member", authMiddleware, async (req, res) => {
+    const userid = req.userid;
+
+    const organizationtitle = req.body.organizationtitle;
+    const memberUsername = req.body.memberUsername;
+
+    const memberExist = await userModel.findOne({
+        username : memberUsername
+    });
+
+    if (!memberExist) {
+        res.status(403).json({
+            msg : "Username Doesn't exist !"
+        });
+        return;
+    };
+
+    const memberId = memberExist._id;
+
+    const organizationExist = await organizatonModel.findOne({
+        title : organizationtitle
+    });
+
+    if (!organizationExist && organizationExist.admin != userid) {
+        res.status(403).json({
+            msg : "organization doesn't exist ! or you don't have access to this Org."
+        });
+        return;
+    };
+
+    const organizationId = organizationExist._id;
+
+    const deleteMember = await organizatonModel.updateOne({
+        _id: organizationId
+    }, {
+            "$pull": {
+                members: memberId
+            }
+    });
+
+    res.status(200).json({
+        member : deleteMember,
+        msg : "member removed !"
     })
 });
 
